@@ -1,3 +1,4 @@
+#File encryption/decryption program that accepts command line input. Developed by Robert Hendrickson.
 from pyAesCrypt import encryptFile, decryptFile //you must use pip/pip3 install pyAesCrypt if you don't have it installed
 from random import randint
 import os
@@ -6,31 +7,28 @@ import argparse
 keychars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ00112233445566778899'
 buffersize = 64*2048
 
-
 def encryptor(filename):
     getfile = filename
     password = ''
-    for i in range(0, 20): // generates a key for encryption of the file
+    for i in range(0, 20): # generates a key for encryption of the file
         password += keychars[randint(0, 45)]
     print("Here is your encryption key: " + password + "\nPlease save this password.")
     encryptedfile = getfile + ".aes"
     encryptFile(getfile, encryptedfile, password, buffersize)
-    //only use one of the following
-    os.rename(getfile, "."+getfile) // renames the original file to .file (in linux this will make it hidden) 
-    #os.remove(getfile) // deletes the file from your computer
-    
+    # only use one of the following
+    os.rename(getfile, "."+getfile) # renames the original file to .file (in linux this will make it hidden) 
+    os.remove(getfile) # deletes the file from your computer
     print("Your file has been encrypted as " + encryptedfile + '.')
-
 
 def decryptor(filename):
     getfile = filename
     password = input("Please enter the key used to encrypt the file: ")
-    decryptedfile = "decrypted" + getfile
+    decryptedfile = "decrypted." + getfile
     decryptFile(getfile, decryptedfile, password, buffersize)
     print("Your file has been decrypted as " + decryptedfile + '.')
     
 def dencryptor():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser() # command line argument settings
     ReqArgs = parser.add_argument_group('required arguments')
     ReqArgs.add_argument("-d", "--decrypt", help="Decrypt file", action="store_true")
     ReqArgs.add_argument("-e", "--encrypt", help="Encrypt file", action="store_true")
