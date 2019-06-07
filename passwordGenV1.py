@@ -13,9 +13,11 @@ keychars='ABCDEFGHIJKLMNOPQRSTUVWXYZ00112233445566778899'
 csv.register_dialect('pDialect', delimiter='|')
 buffersize = 64 * 2048 #buffer for encryption/decryption
 
-def pword_gen(length):
-    global pword
+def pword_gen():
     pword=''
+    needSpecial()
+    needNumber()
+    plength()
     while len(pword)<=length:
         if specials and numbers:
             pword+=chars[randint(0,101)]
@@ -25,13 +27,13 @@ def pword_gen(length):
             pword+=chars[randint(0,51)]
     return pword        
 
-def pass_gen(length):
+def pass_gen():
     getPurpose()
+    plength()
     pword_gen(length)
     return "You're password for "+purpose+' is: '+pword 
 
 def needSpecial():
-    global specials
     specials=input("Do you require special characters? y/n ")
     if 'y' in specials:
         specials=True
@@ -40,7 +42,6 @@ def needSpecial():
     return specials    
 
 def needNumber():
-    global numbers
     numbers=input("Do you require numbers? y/n ")
     if 'y' in numbers:
         numbers=True
@@ -48,11 +49,13 @@ def needNumber():
         numbers=False
     return numbers
 
-def multi_pass(amount,length):
-    global pwordlist
+def multi_pass():
     pwordlist=[['Website','Username','Password']]
     count=0
-    pwordfile=open('Passwords.csv', 'w')    
+    number()
+    plength()
+    getFile()
+    pwordfile=open(fileName, 'w')    
     while count<amount:
         pword2=''
         getPurpose()
@@ -66,25 +69,29 @@ def multi_pass(amount,length):
     for row in pwordlist:
         writer.writerow(row)
     pwordfile.close()
-    print("Passwords have been generated, check the file labeled Passwords.csv")
+    print("Passwords have been generated, check the file labeled " + fileName)
     return pwordlist
 
-def key_gen(length):
-    getPurpose()                    
-    kgen(length)
-    return "Your new key for "+purpose+"is: "+key
+def key_gen():
+    getPurpose()
+    plength()
+    kgen()
+    print("Your new key for "+purpose+"is: "+key)
 
-def kgen(length):
-    global key
+def kgen():
     key=''
+    plength()
     while len(key)<length:
         key+=keychars[randint(0,45)]
     return key    
 
-def multi_key(amount,length):
+def multi_key():
     keylist=[['Purpose', 'Key']]
     count=0
-    keyfile=open('Keys.csv', 'w')
+    number()
+    plength()
+    getFile()
+    keyfile=open(fileName, 'w')
     while count<amount:
         key2=''
         getPurpose()
@@ -97,18 +104,23 @@ def multi_key(amount,length):
     for row in keylist:
         writer.writerow(row)
     keyfile.close()
-    return "Your keys have been generated, check the file labeled Keylist.txt"
+    print("Your keys have been generated, check the file labeled " + fileName)
 
-def pin_gen(length):
+def pin_gen():
     pin=''
+    plength()
     while len(pin)<=length:
         pin+=str(randint(0,9))
-    return "Your new pin is: "+pin
+    print("Your new pin is: "+pin)
+    return pin
 
-def multi_pin(amount,length):
+def multi_pin():
     pinlist=[]
     count=0
-    pinfile=open('Pinlist.txt', 'w')
+    number()
+    plength()
+    getFile()
+    pinfile=open(fileName, 'w')
     while count<amount:
         pin=''
         while len(pin)<=length:
@@ -116,10 +128,9 @@ def multi_pin(amount,length):
         pinlist.append(pin)
     pinfile.write(str(pinlist))
     pinfile.close()
-    return "Your pins have been generated, check the file labeled Pinlist.txt"
+    print("Your pins have been generated, check the file labeled " + fileName)
 
 def generate():
-    global pgen
     pgen=input("Would you like to generate a password? y/n ")
     if 'y' in pgen:
         pgen=True
@@ -128,7 +139,6 @@ def generate():
     return pgen
 
 def multigen():
-    global mgen
     mgen=input("Would you like to generate multiple? y/n ")
     if 'y' in mgen:
         mgen=True
@@ -137,17 +147,18 @@ def multigen():
     return mgen
 
 def number():
-    global amount
     amount=int(input("Please enter the desired amount: "))
     return amount
 
 def plength():
-    global length
     length=int(input("Please enter the desired length: "))
     return length
 
+def getFile():
+    fileName = input("Please enter the name of the output file: ")
+    return fileName
+
 def codekeygen():
-    global keygen
     keygen=input("Would you like to generate a code key? y/n ")
     if 'y' in keygen:
         keygen=True
@@ -156,7 +167,6 @@ def codekeygen():
     return keygen
 
 def numpin():
-    global pingen
     pingen=input("Would you like to generate a numeric PIN? y/n ")
     return pingen
 
@@ -168,7 +178,7 @@ def pass_check(pword):
         print("Password is not valid.")
     return "Password checking complete."    
         
-def multi_checker(pwordlist, amount):
+def multi_checker(pwordlist):
     pwordlist=pwordlist[1:]
     print("Checking passwords now...")
     for x in pwordlist:
@@ -179,17 +189,14 @@ def multi_checker(pwordlist, amount):
     return "Password checking complete."
 
 def getPurpose():
-    global purpose
     purpose = input("Please enter the name of the website this is for: ")
     return purpose
 
 def getUserName():
-    global uName
     uName=input("Please enter your user name for this website: ")
     return uName
     
 def pchecker():
-    global pcheck
     pcheck=input("Would you like to check the password for validity? y/n ")
     if 'y' in pcheck:
         pcheck=True
@@ -197,7 +204,7 @@ def pchecker():
         pcheck=False
     return pcheck
 
-def fileEncryptor():
+def fileEncryptor(fileName):
     length = 20
     getfile = fileName
     key = ''
@@ -206,7 +213,7 @@ def fileEncryptor():
     print("Here is your encryption key: " + key + "\nPlease save this password.")
     encryptedfile = getfile + ".aes"
     encryptFile(getfile, encryptedfile, key, buffersize)
-    os.rename(getfile, "."+getfile)
+    os.remove(getfile)
     print("Your file has been encrypted as " + encryptedfile + '.')
     
 def fileDecryptor():
@@ -217,7 +224,6 @@ def fileDecryptor():
     print("Your file has been decrypted as " + decryptedfile + '.')    
 
 def encryption():
-    global encrypt
     encrypt= input("Would you like to encrypt your file? y/n ")
     if 'y' in encrypt:
         encrypt = True
@@ -229,21 +235,17 @@ def main():
     generate()
     if pgen:
         multigen()
-        needSpecial()
-        needNumber()
         if mgen:
-            number()
-            plength()
-            print(multi_pass(amount,length))
+            print(multi_pass())
             pchecker()
             if pcheck:
-                print(multi_checker(pwordlist, amount))
+                print(multi_checker(pwordlist))
             encryption()
             if encrypt:
-                fileEncryptor()            
+                fileEncryptor(fileName)            
         elif not mgen:
             plength()
-            print(pass_gen(length))
+            print(pass_gen())
             pchecker()
             if pcheck:
                 print(pass_check(pword))
@@ -254,13 +256,13 @@ def main():
             if mgen:
                 number()
                 plength()
-                print(multi_key(amount,length))
+                print(multi_key())
                 encryption()
                 if encrypt:
-                    fileEncryptor() 
+                    fileEncryptor(fileName) 
             elif not mgen:
                 plength()
-                print(key_gen(length))
+                print(key_gen())
         elif not keygen:
             numpin()
             if pingen:
@@ -268,13 +270,13 @@ def main():
                 if mgen:
                     number()
                     plength()
-                    print(multi_pin(amount,length))
+                    print(multi_pin())
                     encryption()
                     if encrypt:
-                        fileEncryptor() 
+                        fileEncryptor(fileName) 
                 if not mgen:
                     plength()
-                    print(pin_gen(length))
+                    print(pin_gen())
         else:
             decrypt = input("Would you like to decrypt a file? y/n ")
             if 'y' in decrypt:
