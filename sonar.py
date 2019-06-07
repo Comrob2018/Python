@@ -188,16 +188,9 @@ def getDifficulty():
            
  ''')
     return difficulty
-
-
-def Sonar():
-
-    global xMax
-    global yMax
-    getDifficulty()
-    while True:
-        
-        if difficulty =='1':
+def diffSettings():
+    
+    if difficulty =='1':
             sD = 16 #num of sonar devices
             tC = 2  #num of chests
             label= '\033[0;34mBeginner\033[0m' #blue 
@@ -250,6 +243,15 @@ def Sonar():
         input(" You chose the {0} level of difficulty. Press enter to continue..." .format(label))
         print()
         print()
+    return (sD, tC, label, xMax, yMax)
+
+
+def Sonar():
+
+    global xMax
+    global yMax
+    getDifficulty()
+    while True:
         
         #game setup
         sonarDevices = sD
@@ -257,7 +259,6 @@ def Sonar():
         theChests = getRandomChests(tC)
         drawBoard(theBoard)
         previousMoves = []
-        
         
         while sonarDevices > 0:
             if sonarDevices > 1: 
@@ -282,7 +283,7 @@ def Sonar():
             previousMoves.append([x, y])
             
             moveResult = makeMove(theBoard, theChests, x, y)
-            if moveResult == False:
+            if not moveResult:
                 continue
             else:
                 if moveResult == 'You have found a sunken treasure chest at ({0}, {1})!'.format(x,y):
@@ -291,14 +292,14 @@ def Sonar():
                 drawBoard(theBoard)
                 print(moveResult)
             
-            if len(theChests) == 0:
+            if len(theChests) <= 0:
                 print(' You have found all the sunken treasure chests! Congratulations and good game!')
                 print(' You had {0} sonar device{1} left.'.format(sonarDevices, extraSsonar))
                 break
             
             sonarDevices -= 1
             
-            if sonarDevices == 0:
+            if sonarDevices <= 0:
                 print(" We've run out of sonar devices! Now we have to turn the ship around and head")
                 print(' for home with {0} treasure chest{1} still out there! Game Over.'.format(len(theChests), extraSchest))
                 print()
