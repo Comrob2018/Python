@@ -11,26 +11,24 @@ def encryptor(filename):
     '''
     file encryption, takes in a file name and encrypts it with AES encryption
     '''
-    getfile = filename
     key = ''
     for i in range(0, 20): # generates a key for encryption of the file
         key += keychars[randint(0, 45)]
     print("Here is your encryption key: " + password + "\nPlease save this password.")
-    encryptedfile = getfile + ".aes"
-    encryptFile(getfile, encryptedfile, key, buffersize)
+    encryptedfile = filename + ".aes"
+    encryptFile(filename, encryptedfile, key, buffersize)
     # only use one of the following
-    os.rename(getfile, "."+getfile) # renames the original file to .file (in linux this will make it hidden) 
-    os.remove(getfile) # deletes the file from your computer
+    os.rename(filename, "."+filename) # renames the original file to .file (in linux this will make it hidden) 
+    os.remove(filename) # deletes the file from your computer
     print("Your file has been encrypted as " + encryptedfile + '.')
 
 def decryptor(filename):
     '''
     file decryption, takes in a file name and decrypts it
     '''
-    getfile = filename
     key = input("Please enter the key used to encrypt the file: ")
-    decryptedfile = "decrypted." + getfile
-    decryptFile(getfile, decryptedfile, key, buffersize)
+    decryptedfile = "decrypted." + filename
+    decryptFile(filename, decryptedfile, key, buffersize)
     print("Your file has been decrypted as " + decryptedfile + '.')
     
 def dencryptor():
