@@ -8,10 +8,9 @@ def drawBoard(board):
     hline = ' '*4 # initial space at the top for the numbers down the left side of the board
     for i in range(1, int(xMax/10)): #xMax variable is for the maximum limit of the x axis on the board
         hline += (' ' * 9) + str(i)  #prints the 10s at the top of the board
-    
     print()
     print(hline)
-    print(' '*3 + ('0123456789' * int(xMax/10))) #prints the 1s below the tens
+    print(' ' * 3 + ('0123456789' * int(xMax/10))) #prints the 1s below the tens
     print()
     # print rows
     for i in range(yMax): #yMax variable is for the maximum limit of the y axis on the board
@@ -23,7 +22,7 @@ def drawBoard(board):
         print('{0}{1} {2} {3}' .format(extraSpace, i, getRow(board, i), i))
     print()
     # print the numbers across the bottom
-    print(' '*3 + ('0123456789' * int(xMax/10)))
+    print(' ' * 3 + ('0123456789' * int(xMax/10)))
     print(hline)
     
 def getRow(board, row):
@@ -191,72 +190,74 @@ def getDifficulty():
 def diffSettings():
     
     if difficulty =='1':
-            sD = 16 #num of sonar devices
-            tC = 2  #num of chests
-            label= '\033[0;34mBeginner\033[0m' #blue 
-            xMax=30 #board width
-            yMax=15 #board height
+        sD = 16 #num of sonar devices
+        tC = 2  #num of chests
+        label= '\033[0;34mBeginner\033[0m' #blue 
+        xMax=30 #board width
+        yMax=15 #board height
 
-        elif difficulty =='2':
-            sD = 20
-            tC = 4
-            label='\033[0;32mIntermediate\033[0m' #green
-            xMax=60
-            yMax=15
+    elif difficulty =='2':
+        sD = 20
+        tC = 4
+        label='\033[0;32mIntermediate\033[0m' #green
+        xMax=60
+        yMax=15
 
-        elif difficulty =='3':
-            sD = 15
-            tC = 5
-            label='\033[1;33mAdvanced\033[0m' #yellow
-            xMax=60
-            yMax=15   
+    elif difficulty =='3':
+        sD = 15
+        tC = 5
+        label='\033[1;33mAdvanced\033[0m' #yellow
+        xMax=60
+        yMax=15   
 
-        elif difficulty =='4':
-            sD = 60
-            tC = 30
-            label='\033[0;33mExpert\033[0m' #orange
-            xMax=60
-            yMax=15
-        
-        elif difficulty =='5':
-            sD = 50
-            tC = 25
-            label='\033[0;31mNightmare\033[0m' #red
-            xMax=60
-            yMax=30
-        
-        elif difficulty == '6':
-            sD = 1
-            tC = 1
-            label='\033[0;35mLucky Guess\033[0m' #purple
-            xMax = 10
-            yMax=5
-            
-        elif difficulty == '7':
-            sD = int(input("Please enter the number of sonar devices: "))
-            tC = int(input("Please enter the number of treasure chests: "))
-            label = '\033[0;34mC\033[0;32mU\033[1;33mS\033[0;33mT\033[0;31mO\033[0;35mM\033[0m' #rainbow
-            xMax = int(input("Please enter the width of the board: "))
-            yMax = int(input("Please enter the height of the board: "))
+    elif difficulty =='4':
+        sD = 60
+        tC = 30
+        label='\033[0;33mExpert\033[0m' #orange
+        xMax=60
+        yMax=15
+
+    elif difficulty =='5':
+        sD = 50
+        tC = 25
+        label='\033[0;31mNightmare\033[0m' #red
+        xMax=60
+        yMax=30
+
+    elif difficulty == '6':
+        sD = 1
+        tC = 1
+        label='\033[0;35mLucky Guess\033[0m' #purple
+        xMax = 10
+        yMax=5
+
+    elif difficulty == '7':
+        sD = int(input("Please enter the number of sonar devices: "))
+        tC = int(input("Please enter the number of treasure chests: "))
+        label = '\033[0;34mC\033[0;32mU\033[1;33mS\033[0;33mT\033[0;31mO\033[0;35mM\033[0m' #rainbow
+        xMax = int(input("Please enter the width of the board: "))
+        yMax = int(input("Please enter the height of the board: "))
                                                                                            
         print()    
         input(" You chose the {0} level of difficulty. Press enter to continue..." .format(label))
         print()
         print()
-    return (sD, tC, label, xMax, yMax)
-
+    global diffTup    
+    diffTup = (sD, tC, label, xMax, yMax)
+    return diffTup
 
 def Sonar():
 
     global xMax
     global yMax
     getDifficulty()
+    diffSettings()
     while True:
         
         #game setup
-        sonarDevices = sD
+        sonarDevices = diffTup[0]
         theBoard = getNewBoard()
-        theChests = getRandomChests(tC)
+        theChests = getRandomChests(diffTup[1])
         drawBoard(theBoard)
         previousMoves = []
         
