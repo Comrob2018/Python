@@ -18,56 +18,51 @@ def ipv4addr(ip):
         if int(x) in range(0,255):
             if len(x) < 4:
                 if int(x) in range(0, 128):
-                    return ip + classA 
+                    print(ip + classA) 
                 elif int(x) in range(128, 192):
-                    return ip +  classB 
+                    print(ip +  classB)
                 elif int(x) in range(192, 224):
-                    return ip +  classC 
+                    print(ip +  classC)
                 elif int(x) in range(224, 240):
-                    return ip + classD
+                    print(ip + classD)
                 elif int(x) in range(240, 255):
-                    return ip + classE
+                    print(ip + classE)
     for x in iplst:
         realip = '.'.join(iplst)
         while True:
             try:
                 ipaddress.ip_address(realip)
-                return True
             except ValueError:
                 print('This is not a valid IP v4 address.')
-                return False
+                break
             
 def subnetting(subnet):
     #This function determines if the subnet mask is valid.
     subnetcheck = ['0','128','192','224','240','248','252','254','255']
     subnetlist = subnet.split('.')
     num=''
-    for octet in subnetlist:
-        x = bin(int(octet))
-        num +=str(x[2::1])
-    cidr= num.count('1')
     if subnetlist[0] == '255':
         if subnetlist[1] in subnetcheck:
             if subnetlist[2] in subnetcheck:
                 if subnetlist[3] in subnetcheck:
+                    for octet in subnetlist:
+                        x = bin(int(octet))
+                        num +=str(x[2::1])
+                    cidr= num.count('1')
                     print('Your CIDR notation is /' + str(cidr) + '.')
                     return cidr
-                else:
-                    print('This is not a valid subnet mask.')
-                    return False
-            else:
                 print('This is not a valid subnet mask.')
                 return False
-        else:
             print('This is not a valid subnet mask.')
             return False
-    else:
-        Print('This is not a valid subnet mask.')
+        print('This is not a valid subnet mask.')
         return False
+    print('This is not a valid subnet mask.')
+    return False
 
 
 def network_id(ip, cidr):
-    #This returns the subnet id when given the ip address and the cidr notation.
+    # This returns the subnet id when given the ip address and the cidr notation.
     x = ip + '/' + cidr
     global net_id
     net_id = ipaddress.ip_network(x, strict=False)
