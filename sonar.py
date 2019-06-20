@@ -1,28 +1,30 @@
-#Modified version of sonar game from Invent your own computer games with python by Al Sweigart book
-#view update log for significant changes
+# Modified version of sonar game from Invent your own computer games with python by Al Sweigart book
+# View update log for significant changes
 
 import random
 import sys
 
-def drawBoard(board):
-    hline = ' '*4 # initial space at the top for the numbers down the left side of the board
-    for i in range(1, int(xMax/10)): #xMax variable is for the maximum limit of the x axis on the board
-        hline += (' ' * 9) + str(i)  #prints the 10s at the top of the board
+def getHSpace(xMax):
+    print("   " + ''.join(str(i%10) for i in range(xMax)))
+    
+def drawBoard(board, xMax, yMax):
+    hline = ' '*4 # initial space at the top to account for the numbers on the left side
+    for i in range(1, int((xMax+10)/10)):
+        hline += (' ' * 9) + str(i)
+        # print the numbers across the top
     print()
     print(hline)
-    print(' ' * 3 + ('0123456789' * int(xMax/10))) #prints the 1s below the tens
-    print()
+    getHSpace(xMax)
     # print rows
-    for i in range(yMax): #yMax variable is for the maximum limit of the y axis on the board
-        # single-digit numbers (0-9) need to be padded with an extra space
+    for i in range(yMax):
+    # single-digit numbers need to be padded with an extra space
         if i < 10:
             extraSpace = ' '
         else:
             extraSpace = ''
-        print('{0}{1} {2} {3}' .format(extraSpace, i, getRow(board, i), i))
-    print()
+        print('{0}{1} {2} {3}'.format(extraSpace, i, getRow(board, i), i))
     # print the numbers across the bottom
-    print(' ' * 3 + ('0123456789' * int(xMax/10)))
+    getHSpace(xMax)
     print(hline)
     
 def getRow(board, row):
@@ -30,19 +32,16 @@ def getRow(board, row):
     for i in range(xMax):
         boardRow+=board[i][row]
     return boardRow
-    
-def getNewBoard():
+
+def getNewBoard(xMax, yMax):
     board=[]
     for x in range(xMax):
         board.append([])
         for y in range(yMax):
             if random.randint(0,1)==0:
                 board[x].append('\033[0;34m~\033[0m')
-                                #\033[0;34m makes water symbol '~' appear blue on screen
-                                #\033[0m resets the text color
             else:
                 board[x].append('\033[1;34m`\033[0m')
-                               #\033[1;34m makes water symbol '`' appear light blue on screen
     return board
     
 def getRandomChests(numChests):
