@@ -3,6 +3,11 @@
 
 import random
 import sys
+pName = ''
+difficulty = ''
+xMax = 0
+yMax = 0
+diffTup = ()
 
 def getHSpace(xMax):
     print("   " + ''.join(str(i%10) for i in range(xMax)))
@@ -67,17 +72,17 @@ def makeMove(board, chests, x, y):
         if distance < smallestDistance:
             smallestDistance = distance
     
-    if smallestDistance == 0:
+    if smallestDistance <= 0:
         chests.remove([x, y])
-        return ' You have found a sunken treasure chest at ({0}, {1})!'.format(x,y)
+        print(' You have found a sunken treasure chest at ({0}, {1})!'.format(x,y))
     else:
         if smallestDistance < 10:
             board[x][y] = str(smallestDistance)
-            return ' Treasure detected at a distance of {0} from the sonar device.'.format(smallestDistance)
+            print(' Treasure detected at a distance of {0} from the sonar device.'.format(smallestDistance))
     
         else:
             board[x][y] = '0'
-            return ' Sonar did not detect anything. All treasure chests out of range.'  
+            print(' Sonar did not detect anything. All treasure chests out of range.')
 
 def enterPlayerMove():
     print(' Where do you want to deploy the sonar device? (0-{0} 0-{1}) (or type quit)'.format((xMax-1),(yMax-1)))
@@ -96,7 +101,7 @@ def playAgain():
     playin=input(' Do you want to play again? yes or no ')
     if 'y' in playin:
         getDifficulty()
-        return playin.lower().startswith('y')
+        Sonar()
     else:
         print(" Thanks for playing!")
         print()
@@ -160,15 +165,15 @@ print(' \033[0;34mSONAR:\033[0m Treasures of the deep')
 print()
 
 def getPname():
-    global pName
     pName=input(' Please enter your name: ')
     print()
+    print(' Welcome to SONAR Captain {0}, '.format(pName))
     return pName
 getPname()                
                 
-print(' Welcome to SONAR Captain {0}, would you like to view the instructions before we begin? yes/no '.format(pName))
+viewInstruct = input(" Would you like to view the instructions before we begin? yes/no ")
 
-if input(' ').lower().startswith('y'):
+if viewInstruct.lower().startswith('y'):
      showInstructions()
         
 def getDifficulty():
@@ -186,6 +191,7 @@ def getDifficulty():
            
  ''')
     return difficulty
+
 def diffSettings():
     
     if difficulty =='1':
@@ -241,6 +247,7 @@ def diffSettings():
         input(" You chose the {0} level of difficulty. Press enter to continue..." .format(label))
         print()
         print()
+        
     global diffTup    
     diffTup = (sD, tC, label, xMax, yMax)
     return diffTup
@@ -292,7 +299,7 @@ def Sonar():
                 drawBoard(theBoard)
                 print(moveResult)
             
-            if len(theChests) <= 0:
+            if theChests <= 0:
                 print(' You have found all the sunken treasure chests! Congratulations and good game!')
                 print(' You had {0} sonar device{1} left.'.format(sonarDevices, extraSsonar))
                 break
